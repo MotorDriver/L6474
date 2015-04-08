@@ -165,18 +165,18 @@ and specifically at figure 9 where there is a time diagram with the clock and se
 
 From the point of view of a library user, the daisy chaining is hidden, and its use is quite simple as you only have to specify the index (from 0 to 2) of the targetted board to use it!
 
-For example, if you want to get the status of the first board you have to write:
-uint16_t statusRegister = myL6474.CmdGetStatus(0);
-to get the status of the second shield:
-uint16_t statusRegister = myL6474.CmdGetStatus(1);
-to get the status of the third shield:
-uint16_t statusRegister = myL6474.CmdGetStatus(2);
+For example, if you want to get the status of the first board you have to write:<br>
+uint16_t statusRegister = myL6474.CmdGetStatus(0); <br>
+to get the status of the second shield:<br>
+uint16_t statusRegister = myL6474.CmdGetStatus(1); <br>
+to get the status of the third shield:<br>
+uint16_t statusRegister = myL6474.CmdGetStatus(2); <br>
 
-To set the torque regulation current  of the first shield board to 625 mA (caution only multiple of 31.25 are supported):
-myL6474.CmdSetParam(0, L6474_TVAL, 625);
+To set the torque regulation current  of the first shield board to 625 mA (caution only multiple of 31.25 are supported):<br><br>
+myL6474.CmdSetParam(0, L6474_TVAL, 625); <br>
 
-To set the torque regulation current  of the second shield board to 1000 mA
-myL6474.CmdSetParam(2, L6474_TVAL, 1000);
+To set the torque regulation current  of the second shield board to 1000 mA<br><br>
+myL6474.CmdSetParam(2, L6474_TVAL, 1000); <br>
 
 9.  Drive one motor by uart commands
 ------------------------------------
