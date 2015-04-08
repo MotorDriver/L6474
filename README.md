@@ -158,7 +158,7 @@ The principles of the daisy chaining are the following:
 - the SDO of the last shieled is linked to the SDI of the UNO
 - the data are transmitted byte by byte.
 - When the CS is high, the SPI works as a delay line: at each clock enabling , a byte is read from the SDI and pushed to the SDO
-- When the CS is released, the L6474 will interpret the available byte at the SDI and insert the answer at the SDO
+- When the CS is released, the last byte received by the L6474 is latched and decoded. The answer is prepared to be sent out vai SDO at the next clock enabling.
 
 And if you want the full details, you can have a look of the application note (still from ST): "AN4290: L647x, L648x and powerSTEP01 family communication protocol" http://www.st.com/st-web-ui/static/active/en/resource/technical/document/application_note/DM00082126.pdf
 and specifically at figure 9 where there is a time diagram with the clock and several devices!
