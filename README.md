@@ -122,8 +122,63 @@ In this case, the standard Arduino delay functions which are based on timer 0 (d
 Moreover, the usage of ISR0 brings some dependencies problem with the standard Arduino library. To limit them, the definition of the ISR0 in the library is performed under a specific compilation flag: _USE_TIMER_0_FOR_L6474. This flag has to be enabled in file: l6474.h" for three shields configuration.
 At last, the way to write the sketch is also impacted. It will be necessary to define a main() function additionally to the usual setup() and loop() functions. For more details, see the example sketch" L6474SketchFor3MotorsShields.ino".
 
+7.  Boards wiring for multi-motors configurations
+------------------------------------------------
 
-7.  Drive one motor by uart commands
+If you want to drive several motors with the library, you will first need to have 2 or 3 X-NUCLEO-IHM01A1 boards.
+The driving of the different motors is done thanks to daisy chaining (see next paragraph). To handle this daising chaining, the boards have two crossover pins that are combined with some shunt (0K) resistors to propagate the SDO (or MOSI) of one board to the SDI (or MISO) of the following one.
+
+By default, the shunt resistors board are set for 1 board configuration (R1, R4, R7, R12 resistors mounted).
+
+For 2 boards configuration, 
+- the first board you have to move these resistors to have R1, R4, R7, R10 resistors mounted
+- the second must have R2, R5, R8, R12 resistors mounted
+
+For 3 boards configuration, 
+- the first must have R1, R4, R7, R10 resistors mounted
+- the second must have R2, R5, R8, R11 resistors mounted
+- the third must have R3, R6, R9, R12 resistors mounted
+
+To have more details you can have a look in paragraph 2.2 of ST document " UM1857: Stepper motor driver expansion board based on L6474 " that you can find here: http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00156746.pdf
+
+Once the shunt resistors are correctly  mounted, you only have to plug on board on top of the other to have a 2 or 3 boards configuration.
+
+Resistors R25 and R24 could also be moved to use another CS (chip select) line or Clock line. But in the case of this library, you can keep the default configuration.
+
+8.  Additionnal information regarding daisy chaining
+----------------------------------------------------
+
+The daisy chaining is used to send command via the SPI from the Uno to several X-NUCLEO-IHM01A1 boards.
+The purpose of these commands can be to enable/disable the bridges, set the parameters of the L6474 (to dynamically adjust the torques for examples), to know the position, to get the alarm status (over current detection, over temperature,...) of the L6474.
+
+The principles of the daisy chaining are the following:
+- all boards share the same clock and chip select.
+- the SDO of the Uno is linked to the SDI of the first shield
+- then each SDO of one shield is linked to the SDI of the following shield (thanks to the two additional crossover pins)
+- the SDO of the last shieled is linked to the SDI of the UNO
+- the data are transmitted byte by byte.
+- When the CS is high, the SPI works as a delay line: at each clock enabling , a byte is read from the SDI and pushed to the SDO
+- When the CS is released, the L6474 will interpret the available byte at the SDI and insert the answer at the SDO
+
+And if you want the full details, you can have a look of the application note (still from ST): "AN4290: L647x, L648x and powerSTEP01 family communication protocol" http://www.st.com/st-web-ui/static/active/en/resource/technical/document/application_note/DM00082126.pdf
+and specifically at figure 9 where there is a time diagram with the clock and several devices!
+
+From the point of view of a library user, the daisy chaining is hidden, and its use is quite simple as you only have to specify the index (from 0 to 2) of the targetted board to use it!
+
+For example, if you want to get the status of the first board you have to write:
+uint16_t statusRegister = myL6474.CmdGetStatus(0);
+to get the status of the second shield:
+uint16_t statusRegister = myL6474.CmdGetStatus(1);
+to get the status of the third shield:
+uint16_t statusRegister = myL6474.CmdGetStatus(2);
+
+To set the torque regulation current  of the first shield board to 625 mA (caution only multiple of 31.25 are supported):
+myL6474.CmdSetParam(0, L6474_TVAL, 625);
+
+To set the torque regulation current  of the second shield board to 1000 mA
+myL6474.CmdSetParam(2, L6474_TVAL, 1000);
+
+9.  Drive one motor by uart commands
 ------------------------------------
 
 If you want to drive one motor by sending commands from a PC to the uno board by Uart, you can take the sketch "L6474SketchFor1MotorShieldDrivenByUart".
