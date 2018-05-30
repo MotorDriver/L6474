@@ -8,12 +8,9 @@ This L6474 library is compatible with the Arduino Uno combined with one or sever
 2.  Installing the library into the Arduino IDE
 ------------------------------------------------
 
-To install the library into the Arduino IDE, you need first to zip the folder "\L6474\libraries\L6474" to L6474.zip.
-Then from the Arduino IDE:
-  - Go to "Sketch > Import Library". At the top of the drop down list, select the option "Add Library". Browse to the location where you put the L6474.zip file and select it.
-  - Return to the "Sketch > Import Library", you should now find the L6474 library at the bottom of the drop-down menu. It is ready to use in new Sketches.
-  
-  
+- Download https://github.com/MotorDriver/L6474/archive/master.zip
+- (In the Arduino IDE) Sketch > Include Library > Add .ZIP Library... > select the downloaded file > Open
+
   3.  Library content
 ---------------------
   
